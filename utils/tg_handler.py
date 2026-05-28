@@ -1,8 +1,8 @@
 import logging
-from tenacity import retry, stop_after_attempt
-import requests
 import os
+import requests
 from dotenv import load_dotenv
+from tenacity import retry, stop_after_attempt
 
 load_dotenv()
 

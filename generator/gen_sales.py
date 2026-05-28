@@ -1,10 +1,15 @@
 import random
-from random import randint, choice
-import pandas as pd
-import numpy as np
-from config import MAX_SHOPS, MAX_CASH_PER_SHOP, PRODUCTS, MAX_RECEIPTS_PER_CASH, PAYMENT_TYPE
-from datetime import datetime
 import uuid
+from datetime import datetime
+import numpy as np
+import pandas as pd
+from config import (
+    MAX_CASH_PER_SHOP,
+    MAX_RECEIPTS_PER_CASH,
+    MAX_SHOPS,
+    PAYMENT_TYPE,
+    PRODUCTS
+)
 from utils.logger import get_logger
 from utils.tg_handler import send_to_tg
 
@@ -13,7 +18,7 @@ logger = get_logger(__name__)
 
 def generate_shops():
     rows = []
-    shop_count = randint(1, MAX_SHOPS)
+    shop_count = random.randint(1, MAX_SHOPS)
     shop_ids = random.sample(range(1, MAX_SHOPS + 1), shop_count)
     for shop_id in shop_ids:
         rows.append({
@@ -26,7 +31,7 @@ def generate_shops():
 def generate_cashes(shops_df):
     rows = []
     for shop_id in shops_df.shop_id:
-        cash_count = randint(1, MAX_CASH_PER_SHOP)
+        cash_count = random.randint(1, MAX_CASH_PER_SHOP)
         cash_ids = random.sample(range(1, MAX_CASH_PER_SHOP + 1), cash_count)
         for cash_id in cash_ids:
             rows.append({
@@ -37,9 +42,9 @@ def generate_cashes(shops_df):
 
 
 def generate_item(doc_id):
-    category = choice(list(PRODUCTS.keys()))
-    item = choice(PRODUCTS[category])
-    amount = randint(1, 5)
+    category = random.choice(list(PRODUCTS.keys()))
+    item = random.choice(PRODUCTS[category])
+    amount = random.randint(1, 5)
     price = round(np.random.uniform(1, 100), 2)
     discount = np.random.randint(0, 100)
     total = round(amount * price * (1 - discount / 100), 2)
@@ -62,7 +67,7 @@ def generate_receipt(shop_id, cash_id): #, receipt_date):
         'cash_id': cash_id,
         'receipt_date': datetime.now(), ############
         #'receipt_date': receipt_date,
-        'payment_type': choice(PAYMENT_TYPE)
+        'payment_type': random.choice(PAYMENT_TYPE)
     }
     rows = []
     num_receipts = np.random.randint(1, 3)
@@ -85,7 +90,7 @@ def generate_daily_data(): #######
     for _, cash_row in cashes_df.iterrows():
         shop_id = cash_row['shop_id']
         cash_id = cash_row['cash_id']
-        num_receipts_for_cash = randint(1, MAX_RECEIPTS_PER_CASH)
+        num_receipts_for_cash = random.randint(1, MAX_RECEIPTS_PER_CASH)
         for _ in range(num_receipts_for_cash):
             receipt, items = generate_receipt(shop_id, cash_id) #, target_date)
             all_receipts.append(receipt)

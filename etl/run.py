@@ -1,11 +1,10 @@
-from etl.export_to_db import from_minio_to_db
-from generator.gen_sales import generate_data
-from storage.pgdb import PGDatabase
-from storage.minio_client import MinIOClient
-from generator.gen_sales import export_to_minio
+#from datetime import datetime
 from dotenv import load_dotenv
+from etl.export_to_db import from_minio_to_db
+from generator.gen_sales import export_to_minio, generate_data
+from storage.minio_client import MinIOClient
+from storage.pgdb import PGDatabase
 from utils.logger import get_logger
-from datetime import datetime
 from utils.tg_handler import send_to_tg
 
 logger = get_logger(__name__)

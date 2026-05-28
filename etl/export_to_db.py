@@ -1,7 +1,8 @@
-from psycopg2.extras import execute_values
 import re
-from storage.pgdb import PGDatabase
+from datetime import datetime
 import pandas as pd
+from psycopg2.extras import execute_values
+from storage.pgdb import PGDatabase
 from utils.logger import get_logger
 from utils.tg_handler import send_to_tg
 
@@ -45,10 +46,15 @@ def from_minio_to_db(minio):
             logger.info('Nothing to load')
             return
 
+        today = datetime.now().strftime('%Y-%m-%d')
+        processed_prefix = f'processed/{today}/'
         for file_data in all_files_data:
             df = file_data['df']
             filename = file_data['filename']
             file_key = file_data['file_key']
+
+            processed_key = f'{processed_prefix}{filename}'
+
             data = list(
                 df[['doc_id', 'item', 'category', 'amount', 'price', 'discount']]
                 .itertuples(index=False, name=None)
@@ -63,6 +69,9 @@ def from_minio_to_db(minio):
                                data)
 
                 db.conn.commit()
+
+                copy_source = {'Bucket': minio.bucket, 'Key': file_key}
+                minio.client.copy_object(CopySource=copy_source, Bucket=minio.bucket, Key=processed_key)
                 minio.client.delete_object(Bucket=minio.bucket, Key=file_key)
                 logger.info(f'{filename} loaded and deleted')
                 total_loaded += len(data)

@@ -1,11 +1,11 @@
-import boto3
-from botocore.client import Config
 import io
 import os
+import boto3
+from botocore.client import Config
 from dotenv import load_dotenv
-from utils.tg_handler import send_to_tg
 from tenacity import retry, stop_after_attempt
 from utils.logger import get_logger
+from utils.tg_handler import send_to_tg
 
 load_dotenv()
 
