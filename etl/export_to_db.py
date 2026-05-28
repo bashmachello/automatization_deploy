@@ -5,7 +5,7 @@ from psycopg2.extras import execute_values
 from storage.minio_client import MinIOClient
 from storage.pgdb import PGDatabase
 from utils.logger import get_logger
-from utils.tg_handler import send_to_tg
+from utils.tg_handler import send_to_tg, safe_send
 
 logger = get_logger(__name__)
 
@@ -78,9 +78,9 @@ def from_minio_to_db(minio):
             except Exception:
                 db.conn.rollback()
                 logger.exception(f'Failed processing {filename}')
-                send_to_tg(f'Failed loading {filename}')
+                safe_send(f'Failed loading {filename}')
         logger.info(f'Total rows saved: {total_loaded}')
-        send_to_tg(f'Total rows saved {total_loaded} to DB')
+        safe_send(f'Total rows saved {total_loaded} to DB')
 
 
 if __name__ == "__main__":

@@ -11,7 +11,7 @@ from config import (
     PRODUCTS
 )
 from utils.logger import get_logger
-from utils.tg_handler import send_to_tg
+from utils.tg_handler import send_to_tg, safe_send
 
 logger = get_logger(__name__)
 
@@ -115,4 +115,4 @@ def export_to_minio(receipts_df, items_df, minio):
         uploaded_count += 1
         total_rows += len(export_data)
         logger.info(f'Загружено {len(export_data)} записей в {filename}')
-    send_to_tg(f"Загружено {uploaded_count} файлов ({total_rows} строк) в MinIO")
+    safe_send(f"Загружено {uploaded_count} файлов ({total_rows} строк) в MinIO")

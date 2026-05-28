@@ -5,7 +5,7 @@ from botocore.client import Config
 from dotenv import load_dotenv
 from tenacity import retry, stop_after_attempt
 from utils.logger import get_logger
-from utils.tg_handler import send_to_tg
+from utils.tg_handler import send_to_tg, safe_send
 
 load_dotenv()
 
@@ -52,7 +52,7 @@ class MinIOClient:
             return True
         except Exception:
             logger.exception(f'Failed to upload {filename} to {full_path}')
-            send_to_tg(f'Failed to upload {filename} to {full_path}')
+            safe_send(f'Failed to upload {filename} to {full_path}')
             raise
 
     def list_files(self, prefix=''):

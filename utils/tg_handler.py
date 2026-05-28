@@ -33,5 +33,11 @@ def send_to_tg(text):
                       json={'chat_id': chat_id,
                             'text': text},
                       timeout=5)
-    except Exception as e:
+    except Exception:
         pass
+
+def safe_send(text: str):
+    try:
+        send_to_tg(text)
+    except Exception:
+        logger.warning('Telegram unavailable')
