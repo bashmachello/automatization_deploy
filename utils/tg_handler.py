@@ -34,5 +34,4 @@ def send_to_tg(text):
                             'text': text},
                       timeout=5)
     except Exception as e:
-        print(e)
-        raise
+        pass
