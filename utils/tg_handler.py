@@ -1,5 +1,7 @@
 import logging
 import os
+from http.client import responses
+
 import requests
 from dotenv import load_dotenv
 from tenacity import retry, stop_after_attempt
@@ -28,10 +30,8 @@ class TelegramHandler(logging.Handler):
 def send_to_tg(text):
     token = os.getenv('TELEGRAM_TOKEN')
     chat_id = os.getenv('TELEGRAM_CHAT_ID')
-    try:
-        requests.post(f'https://api.telegram.org/bot{token}/sendMessage',
-                      json={'chat_id': chat_id,
-                            'text': text},
-                      timeout=5)
-    except Exception:
-        pass
+    response = requests.post(f'https://api.telegram.org/bot{token}/sendMessage',
+                  json={'chat_id': chat_id,
+                        'text': text},
+                  timeout=5)
+    response.raise_for_status()
