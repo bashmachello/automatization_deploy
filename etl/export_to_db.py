@@ -2,12 +2,12 @@ import re
 from datetime import datetime
 import pandas as pd
 from psycopg2.extras import execute_values
+from storage.minio_client import MinIOClient
 from storage.pgdb import PGDatabase
 from utils.logger import get_logger
 from utils.tg_handler import send_to_tg
 
 logger = get_logger(__name__)
-
 
 def read_from_minio(minio):
     pattern = re.compile(r'^(\d+)_(\d+)\.csv$')
@@ -67,7 +67,6 @@ def from_minio_to_db(minio):
                                VALUES %s ON CONFLICT
                                ON CONSTRAINT sales_unique DO NOTHING""",
                                data)
-
                 db.conn.commit()
 
                 copy_source = {'Bucket': minio.bucket, 'Key': file_key}
@@ -84,5 +83,5 @@ def from_minio_to_db(minio):
         send_to_tg(f'Total rows saved {total_loaded} to DB')
 
 
-# if __name__ == "__main__":
-#     from_minio_to_db(minio)
+if __name__ == "__main__":
+    from_minio_to_db( MinIOClient())

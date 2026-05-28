@@ -57,7 +57,7 @@ def main(): #########
             raise
 
     export_to_minio(receipts_df, items_df, minio)
-    from_minio_to_db(minio)
+    #from_minio_to_db(minio)
     logger.info('Pipeline finished')
     send_to_tg('Pipeline finished')
 
