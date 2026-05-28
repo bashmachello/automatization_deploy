@@ -5,7 +5,7 @@ from generator.gen_sales import export_to_minio, generate_data
 from storage.minio_client import MinIOClient
 from storage.pgdb import PGDatabase
 from utils.logger import get_logger
-from utils.tg_handler import send_to_tg, safe_send
+from utils.tg_handler import send_to_tg
 
 logger = get_logger(__name__)
 
@@ -24,13 +24,13 @@ load_dotenv()
 
 def main(): #########
     logger.info('Pipeline started')
-    safe_send('Generating has been started')
+    send_to_tg('Generating has been started')
 
     receipts_df, items_df, shops_df, cashes_df = generate_data() ###########
 
     if receipts_df is None:
         logger.info('Pipeline skipped on Sunday')
-        safe_send('Pipeline skipped on Sunday')
+        send_to_tg('Pipeline skipped on Sunday')
         return
 
     minio = MinIOClient()
@@ -39,7 +39,7 @@ def main(): #########
                 f'Cashes: {len(cashes_df)}, '
                 f'Receipts: {len(receipts_df)}, '
                 f'Items: {len(items_df)}')
-    safe_send(f'Generated:\n'
+    send_to_tg(f'Generated:\n'
                f'Shops: {len(shops_df)},\n'
                f'Cashes: {len(cashes_df)},\n'
                f'Receipts: {len(receipts_df)},\n'
@@ -59,7 +59,7 @@ def main(): #########
     export_to_minio(receipts_df, items_df, minio)
     #from_minio_to_db(minio)
     logger.info('Pipeline finished')
-    safe_send('Pipeline finished')
+    send_to_tg('Pipeline finished')
 
 
 if __name__ == '__main__':

@@ -6,6 +6,7 @@ from tenacity import retry, stop_after_attempt
 
 load_dotenv()
 
+logger = logging.getLogger(__name__)
 
 class TelegramHandler(logging.Handler):
     def __init__(self):
@@ -29,15 +30,10 @@ def send_to_tg(text):
     token = os.getenv('TELEGRAM_TOKEN')
     chat_id = os.getenv('TELEGRAM_CHAT_ID')
     try:
-        requests.post(f'https://api.telegram.org/bot{token}/sendMessage',
+        response  = requests.post(f'https://api.telegram.org/bot{token}/sendMessage',
                       json={'chat_id': chat_id,
                             'text': text},
                       timeout=5)
-    except Exception:
-        pass
-
-def safe_send(text: str):
-    try:
-        send_to_tg(text)
-    except Exception:
-        logger.warning('Telegram unavailable')
+        response.raise_for_status()
+    except Exception as e:
+        logger.warning(f"Telegram send failed: {e}")
