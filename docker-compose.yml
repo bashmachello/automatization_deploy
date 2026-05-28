@@ -63,31 +63,6 @@ services:
       - metabase_data:/metabase.db
     networks:
       - sales-network
-#
-#  etl-generator:
-#    build: .
-#    container_name: etl-generator
-#    depends_on:
-#      - postgres
-#      - minio
-#    env_file:
-#      - .env
-#    command: python -m etl.run
-#    networks:
-#      - sales-network
-#
-#  etl-loader:
-#    build: .
-#    container_name: etl-loader
-#    env_file:
-#      - .env
-#    command: python -m etl.export_to_db
-#    depends_on:
-#      - postgres
-#      - minio
-#    networks:
-#      - sales-network
-
 
 volumes:
   postgres_data:
