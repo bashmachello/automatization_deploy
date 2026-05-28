@@ -64,11 +64,22 @@ services:
     networks:
       - sales-network
 
+  etl:
+    build: .
+    image: sales-etl:latest
+    env_file:
+      - .env
+    networks:
+      - sales-network
+    depends_on:
+      - postgres
+      - minio
+
 volumes:
   postgres_data:
   minio_data:
   metabase_db_data:
-  metabase_data:
+  #metabase_data:
 
 networks:
   sales-network:
