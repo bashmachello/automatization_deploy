@@ -79,7 +79,7 @@ volumes:
   postgres_data:
   minio_data:
   metabase_db_data:
-  #metabase_data:
+  metabase_data:
 
 networks:
   sales-network:
