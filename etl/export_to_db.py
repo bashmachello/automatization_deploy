@@ -61,20 +61,21 @@ def from_minio_to_db(minio):
             )
 
             try:
-                execute_values(db.cur,
+                inserted_rows = execute_values(db.cur,
                                """
                                INSERT INTO sales (doc_id, item, category, amount, price, discount)
-                               VALUES %s ON CONFLICT
-                               ON CONSTRAINT sales_unique DO NOTHING
+                               VALUES %s --ON CONFLICT
+                               --ON CONSTRAINT sales_unique DO NOTHING
                                RETURNING doc_id""",
-                               data)
+                               data, fetch=True)
+                inserted = len(inserted_rows )
+                total_loaded += inserted
                 db.conn.commit()
 
                 copy_source = {'Bucket': minio.bucket, 'Key': file_key}
                 minio.client.copy_object(CopySource=copy_source, Bucket=minio.bucket, Key=processed_key)
                 minio.client.delete_object(Bucket=minio.bucket, Key=file_key)
-                inserted = len(db.cur.fetchall())
-                total_loaded += inserted
+
                 logger.info(f'{filename} loaded and deleted')
                 logger.info(f'Saved {inserted} rows from {filename} to Sales')
             except Exception:
