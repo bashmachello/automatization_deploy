@@ -1,5 +1,3 @@
-
-```markdown
 # Автоматизация обработки данных торговой сети
 
 ## Описание проекта
@@ -19,26 +17,28 @@
 ### Структура проекта
 ```
 automatization_deploy/
-├── etl/                     # ETL модули
+├── etl/                          # ETL модули
 │   ├── __init__.py
-│   ├── run.py               # Основной скрипт генерации
-│   └── export_to_db.py      # Загрузка из MinIO в PostgreSQL
-├── generator/               # Генерация данных
+│   ├── run.py                    # Основной скрипт генерации
+│   └── export_to_db.py           # Загрузка из MinIO в PostgreSQL
+├── generator/                    # Генерация данных
 │   ├── __init__.py
 │   └── gen_sales.py
-├── storage/                 # Работа с хранилищами
+├── storage/                      # Работа с хранилищами
 │   ├── __init__.py
 │   ├── minio_client.py
 │   └── pgdb.py
-├── utils/                   # Утилиты
+├── utils/                        # Утилиты
 │   ├── __init__.py
 │   ├── logger.py
 │   └── tg_handler.py
-├── logs/                    # Логи (создаётся автоматически)
+├── logs/                         # Логи (создаётся автоматически)
 ├── docker-compose.yml
-├── create_tables.sql        # SQL схема БД
+├── config.py                     # Данные для изменения
+├── create_tables.sql             # SQL схема БД
+├── drop_tables.sql               # Удаление БД
 ├── requirements.txt
-├── .env.example             # Шаблон переменных окружения
+├── .env.example                  # Шаблон переменных окружения
 └── README.md
 ```
 
@@ -121,6 +121,10 @@ docker-compose up -d
 ```bash
 sudo docker exec -i sales_postgres psql -U postgres -d sales_db < create_tables.sql
 ```
+### и удаление таблиц в PostgreSQL
+```bash
+sudo docker exec -i sales_postgres psql -U postgres -d sales_db < drop_tables.sql
+```
 
 ### 7. Первый ручной запуск ETL процесса
 
@@ -196,4 +200,4 @@ deactivate
 ## Лицензия
 
 MIT
-```
+
