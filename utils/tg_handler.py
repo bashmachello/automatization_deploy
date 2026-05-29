@@ -12,6 +12,9 @@ logger = logging.getLogger(__name__)
 def send_to_tg(text):
     token = os.getenv('TELEGRAM_TOKEN')
     chat_id = os.getenv('TELEGRAM_CHAT_ID')
+    if not token or not chat_id:
+        logger.warning('Telegram token or chat id not set')
+        return
     try:
         response  = requests.post(f'https://api.telegram.org/bot{token}/sendMessage',
                       json={'chat_id': chat_id,
