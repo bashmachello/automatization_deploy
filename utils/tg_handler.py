@@ -8,23 +8,6 @@ load_dotenv()
 
 logger = logging.getLogger(__name__)
 
-class TelegramHandler(logging.Handler):
-    def __init__(self):
-        super().__init__()
-        self.token = os.getenv('TELEGRAM_TOKEN')
-        self.chat_id = os.getenv('TELEGRAM_CHAT_ID')
-
-    def emit(self, record):
-        try:
-            message = self.format(record)
-            requests.post(f'https://api.telegram.org/bot{self.token}/sendMessage',
-                          json={'chat_id': self.chat_id,
-                                'text': message},
-                          timeout=5)
-        except Exception:
-            pass
-
-
 @retry(stop=stop_after_attempt(3))
 def send_to_tg(text):
     token = os.getenv('TELEGRAM_TOKEN')

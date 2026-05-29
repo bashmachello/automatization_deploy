@@ -1,6 +1,4 @@
-#from datetime import datetime
 from dotenv import load_dotenv
-from etl.export_to_db import from_minio_to_db
 from generator.gen_sales import export_to_minio, generate_data
 from storage.minio_client import MinIOClient
 from storage.pgdb import PGDatabase
@@ -11,22 +9,12 @@ logger = get_logger(__name__)
 
 load_dotenv()
 
-#
-# def test_all_weekdays():
-#     for i in range(7):
-#         test_date = datetime(2024, 1, i + 1)
-#         print(f'Запуск за {test_date.strftime("%A %Y-%m-%d")}')
-#         try:
-#             main(test_date)
-#         except Exception as e:
-#             print(f'Ошибка: {e}')
 
-
-def main(): #########
+def main():
     logger.info('Pipeline started')
     send_to_tg('Generating has been started')
 
-    receipts_df, items_df, shops_df, cashes_df = generate_data() ###########
+    receipts_df, items_df, shops_df, cashes_df = generate_data()
 
     if receipts_df is None:
         logger.info('Pipeline skipped on Sunday')
@@ -57,11 +45,9 @@ def main(): #########
             raise
 
     export_to_minio(receipts_df, items_df, minio)
-    #from_minio_to_db(minio)
     logger.info('Pipeline finished')
     send_to_tg('Pipeline finished')
 
 
 if __name__ == '__main__':
-    #test_all_weekdays()
     main()

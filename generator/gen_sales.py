@@ -44,9 +44,9 @@ def generate_cashes(shops_df):
 def generate_item(doc_id):
     category = random.choice(list(PRODUCTS.keys()))
     item = random.choice(PRODUCTS[category])
-    amount = random.randint(1, 5)
-    price = round(np.random.uniform(1, 100), 2)
-    discount = np.random.randint(0, 100)
+    amount = random.randint(1, 10)
+    price = round(np.random.uniform(1, 10000), 2)
+    discount = np.random.randint(0, 75)
     total = round(amount * price * (1 - discount / 100), 2)
     return {
         'doc_id': doc_id,
@@ -59,28 +59,24 @@ def generate_item(doc_id):
     }
 
 
-def generate_receipt(shop_id, cash_id): #, receipt_date):
+def generate_receipt(shop_id, cash_id):
     doc_id = str(uuid.uuid4())[:8]
     receipt = {
         'doc_id': doc_id,
         'shop_id': shop_id,
         'cash_id': cash_id,
-        'receipt_date': datetime.now(), ############
-        #'receipt_date': receipt_date,
+        'receipt_date': datetime.now(),
         'payment_type': random.choice(PAYMENT_TYPE)
     }
-    rows = []
-    num_receipts = np.random.randint(1, 3)
-    for _ in range(num_receipts):
-        rows.append(generate_item(doc_id))
-    return receipt, rows
+    items = []
+    num_items = np.random.randint(1, 15)
+    for _ in range(num_items):
+        items.append(generate_item(doc_id))
+    return receipt, items
 
 
-def generate_daily_data(): #######
-    #target_date = test_date if test_date else datetime.now()
+def generate_daily_data():
     if datetime.today().weekday() == 6:
-    #if target_date.weekday() == 6:
-        #logger.info(f'Skip {target_date.strftime("%A")}')
         logger.info(f'Skip Sunday')
         return None, None, None, None
     shops_df = generate_shops()
@@ -92,14 +88,14 @@ def generate_daily_data(): #######
         cash_id = cash_row['cash_id']
         num_receipts_for_cash = random.randint(1, MAX_RECEIPTS_PER_CASH)
         for _ in range(num_receipts_for_cash):
-            receipt, items = generate_receipt(shop_id, cash_id) #, target_date)
+            receipt, items = generate_receipt(shop_id, cash_id)
             all_receipts.append(receipt)
             all_receipt_items.extend(items)
     return pd.DataFrame(all_receipts), pd.DataFrame(all_receipt_items), shops_df, cashes_df
 
 
-def generate_data(): ###########
-    receipts_df, items_df, shops_df, cashes_df = generate_daily_data() ########
+def generate_data():
+    receipts_df, items_df, shops_df, cashes_df = generate_daily_data()
     return receipts_df, items_df, shops_df, cashes_df
 
 

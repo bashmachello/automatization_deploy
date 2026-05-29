@@ -7,6 +7,6 @@ PRODUCTS = {'Кухня': ['Кастрюли', 'Сковороды', 'Чайни
             'Уборка': ['Швабры', 'Тряпки', 'Щетки', 'Перчатки', 'Ведра и тазы', 'Средства для уборки']}
 PAYMENT_TYPE = ['card', 'cash', 'credit', 'qr']
 
-MAX_SHOPS = 3
-MAX_CASH_PER_SHOP = 3
-MAX_RECEIPTS_PER_CASH = 5
+MAX_SHOPS = 15
+MAX_CASH_PER_SHOP = 7
+MAX_RECEIPTS_PER_CASH = 30
