@@ -60,7 +60,7 @@ def generate_item(doc_id):
 
 
 def generate_receipt(shop_id, cash_id):
-    doc_id = uuid.uuid4()
+    doc_id = str(uuid.uuid4())
     receipt = {
         'doc_id': doc_id,
         'shop_id': shop_id,
