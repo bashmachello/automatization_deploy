@@ -73,9 +73,9 @@ def from_minio_to_db(minio):
                 minio.client.copy_object(CopySource=copy_source, Bucket=minio.bucket, Key=processed_key)
                 minio.client.delete_object(Bucket=minio.bucket, Key=file_key)
                 logger.info(f'{filename} loaded and deleted')
-                inserted = db.cur.rowcount
+                inserted = len(db.cur.fetchall())
                 total_loaded += inserted
-                logger.info(f'Saved {len(data)} rows from {filename} to Sales')
+                logger.info(f'Saved {inserted} rows from {filename} to Sales')
             except Exception:
                 db.conn.rollback()
                 logger.exception(f'Failed processing {filename}')
